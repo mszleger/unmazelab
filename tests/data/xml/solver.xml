@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <name>Solver Name</name>
+    <command>Solver Command</command>
+    <checked>True</checked>
+</config>
