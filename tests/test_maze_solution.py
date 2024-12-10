@@ -1,12 +1,33 @@
-from app.maze_solution import *
 import numpy as np
+import pytest
 
-def test_get_solver_name():
-    ms = MazeSolution("DummySolver")
-    assert ms.get_solver_name() == "DummySolver"
+from app.maze_solution import *
 
-def test_load_solution_from_solver():
-    ms = MazeSolution("DummySolver")
-    ms.load_solution_from_solver("1000\n1\n2\n3\n4\n")
-    assert ms.get_solving_time() == 1000
-    assert (ms.get_path() == np.array([[1, 2], [3, 4]])).all()
+def test_default_constructor():
+    ms = MazeSolution(1000, np.array([[1, 2], [3, 4]]))
+    assert ms.solving_time_us == 1000
+    assert (ms.path == np.array([[1, 2], [3, 4]])).all()
+
+def test_frame_loading_constructor():
+    ms = MazeSolution("1000\n1\n2\n3\n4\n")
+    assert ms.solving_time_us == 1000
+    assert (ms.path == np.array([[1, 2], [3, 4]])).all()
+
+def test_solving_time_us():
+    ms = MazeSolution(1000, np.array([[1, 2], [3, 4]]))
+    with pytest.raises(ValueError, match="Solving time must be integer"):
+        ms.solving_time_us = "test"
+
+def test_path():
+    ms = MazeSolution(1000, np.array([[1, 2], [3, 4]]))
+    with pytest.raises(ValueError, match="Path must be numpy.ndarray"):
+        ms.path = 5
+    with pytest.raises(ValueError, match="Path must have two columns"):
+        ms.path = np.array([[1, 2, 3], [4, 5, 6]])
+    with pytest.raises(ValueError, match="Path must have at least two rows"):
+        ms.path = np.array([[1, 2]])
+
+def test_load_solver_output_frame():
+    ms = MazeSolution("1000\n1\n2\n3\n4\n")
+    assert ms.solving_time_us == 1000
+    assert (ms.path == np.array([[1, 2], [3, 4]])).all()

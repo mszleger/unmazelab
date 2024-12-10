@@ -1,27 +1,46 @@
+from multipledispatch import dispatch
 import numpy as np
 
 class MazeSolution:
-    def __init__(self, solver_name):
-        self.__solver_name = solver_name
-        self.__solving_time = None
-        self.__path = np.array([])
+    @dispatch(int, np.ndarray)
+    def __init__(self, solving_time_us, path):
+        self.solving_time_us = solving_time_us
+        self.path = path
 
-    def load_solution_from_solver(self, frame):
+    @dispatch(str)
+    def __init__(self, solver_output_frame):
+        self.load_solver_output_frame(solver_output_frame)
+
+    @property
+    def solving_time_us(self):
+        return self._solving_time_us
+
+    @solving_time_us.setter
+    def solving_time_us(self, solving_time_us):
+        if type(solving_time_us) != int:
+            raise ValueError("Solving time must be integer")
+        self._solving_time_us = solving_time_us
+
+    @property
+    def path(self):
+        return self._path
+
+    @path.setter
+    def path(self, path):
+        if type(path) != np.ndarray:
+            raise ValueError("Path must be numpy.ndarray")
+        if path.shape[1] != 2:
+            raise ValueError("Path must have two columns")
+        if path.shape[0] < 2:
+            raise ValueError("Path must have at least two rows")
+        self._path = path
+
+    def load_solver_output_frame(self, frame):
         values = frame.strip().split('\n')
-        self.__solving_time = int(values.pop(0))
+        self.solving_time_us = int(values.pop(0))
         path = []
         while values:
-            pos = np.array([-1, -1])
-            pos[0] = int(values.pop(0))
-            pos[1] = int(values.pop(0))
+            pos = np.array([int(values.pop(0)),
+                            int(values.pop(0))])
             path.append(pos)
-        self.__path = np.array(path)
-
-    def get_solver_name(self):
-        return self.__solver_name
-
-    def get_solving_time(self):
-        return self.__solving_time
-
-    def get_path(self):
-        return self.__path.copy()
+        self.path = np.array(path)
