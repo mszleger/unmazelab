@@ -1,3 +1,4 @@
+from multipledispatch import dispatch
 import numpy as np
 import random
 import xml.etree.ElementTree as ET
@@ -5,9 +6,14 @@ import xml.etree.ElementTree as ET
 from app.grid_wanderer import GridWanderer
 
 class Maze:
+    @dispatch(np.ndarray, int)
     def __init__(self, size, seed):
         self.size = size
         self.seed = seed
+
+    @dispatch(ET.Element)
+    def __init__(self, xml_config_tree_root):
+        self.load(xml_config_tree_root)
 
     @property
     def size(self):

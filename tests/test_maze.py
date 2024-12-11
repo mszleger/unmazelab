@@ -4,6 +4,19 @@ import random
 
 from app.maze import *
 
+def test_default_constructor():
+    m = Maze(np.array([2, 3]), 0)
+    assert (m.size == np.array([2, 3])).all()
+    assert m.seed == 0
+
+def test_xml_loading_constructor():
+    tree = ET.parse("tests/data/xml/maze.xml")
+    root = tree.getroot()
+    m = Maze(root)
+    assert int(m.size[0]) == 10
+    assert int(m.size[1]) == 20
+    assert m.seed == 5
+
 def test_size():
     m = Maze(np.array([2, 2]), 0)
     assert (m.size == np.array([2, 2])).all()
