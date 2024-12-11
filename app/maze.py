@@ -1,79 +1,126 @@
-from app.grid_wanderer import GridWanderer
 import numpy as np
 import random
+import xml.etree.ElementTree as ET
+
+from app.grid_wanderer import GridWanderer
 
 class Maze:
     def __init__(self, size, seed):
-        self.__size = size.copy()
-        self.__generate(seed)
+        self.size = size
+        self.seed = seed
 
-    def __generate(self, seed):
-        random.seed(seed)
-        self.__generate_start_pos()
-        self.__generate_finish_pos()
-        self.__generate_walls()
+    @property
+    def size(self):
+        return self._size
 
-    def __generate_start_pos(self):
-        self.__start_pos = np.array([random.randint(0, self.__size[0] - 1), random.randint(0, self.__size[1] - 1)])
+    @size.setter
+    def size(self, size):
+        if type(size) != np.ndarray:
+            raise ValueError("Size must be numpy.ndarray")
+        if size.size != 2 or size.shape[0] != 2:
+            raise ValueError("Size must be one dimensional array with two values")
+        if (size < 2).any():
+            raise ValueError("Both values of size must be equal or greater than 2")
+        self._size = size
 
-    def __generate_finish_pos(self):
+    @property
+    def seed(self):
+        return self._seed
+
+    @seed.setter
+    def seed(self, seed):
+        if type(seed) != int:
+            raise ValueError("Seed must be integer")
+        self._seed = seed
+
+    @property
+    def start_pos(self):
+        return self._start_pos
+
+    @start_pos.setter
+    def start_pos(self, start_pos):
+        if type(start_pos) != np.ndarray:
+            raise ValueError("Start position must be numpy.ndarray")
+        if start_pos.size != 2 or start_pos.shape[0] != 2:
+            raise ValueError("Start position must be one dimensional array with two values")
+        if (start_pos < 0).any() or start_pos[0] >= self.size[0] or start_pos[1] >= self.size[1]:
+            raise ValueError("Start position is outside of the maze")
+        self._start_pos = start_pos
+
+    @property
+    def finish_pos(self):
+        return self._finish_pos
+
+    @finish_pos.setter
+    def finish_pos(self, finish_pos):
+        if type(finish_pos) != np.ndarray:
+            raise ValueError("Finish position must be numpy.ndarray")
+        if finish_pos.size != 2 or finish_pos.shape[0] != 2:
+            raise ValueError("Finish position must be one dimensional array with two values")
+        if (finish_pos < 0).any() or finish_pos[0] >= self.size[0] or finish_pos[1] >= self.size[1]:
+            raise ValueError("Finish position is outside of the maze")
+        self._finish_pos = finish_pos
+    
+    def load(self, xml_config_tree_root):
+        self.size = np.array([int(xml_config_tree_root.find("height").text),
+                              int(xml_config_tree_root.find("width").text)])
+        self.seed = int(xml_config_tree_root.find("seed").text)
+
+    def save(self, xml_config_tree_root):
+        ET.SubElement(xml_config_tree_root, "height").text = str(self.size[0])
+        ET.SubElement(xml_config_tree_root, "width").text = str(self.size[1])
+        ET.SubElement(xml_config_tree_root, "seed").text = str(self.seed)
+
+    def generate(self):
+        random.seed(self.seed)
+        self.generate_start_pos()
+        self.generate_finish_pos()
+        self.generate_walls()
+
+    def generate_start_pos(self):
+        self.start_pos = np.array([random.randint(0, self.size[0] - 1), random.randint(0, self.size[1] - 1)])
+
+    def generate_finish_pos(self):
         while True:
-            self.__finish_pos = np.array([random.randint(0, self.__size[0] - 1), random.randint(0, self.__size[1] - 1)])
-            if (self.__start_pos != self.__finish_pos).any():
+            self.finish_pos = np.array([random.randint(0, self.size[0] - 1), random.randint(0, self.size[1] - 1)])
+            if (self.start_pos != self.finish_pos).any():
                 break
 
-    def __generate_walls(self):
-        gw = GridWanderer(self.__size)
-        self.__set_walls_everywhere()
-        for row in range(0, self.__size[0]):
-            for col in range(0, self.__size[1]):
-                pos = np.array([row, col])
-                gw.set_current_pos(pos)
+    def generate_walls(self):
+        gw = GridWanderer(self.size)
+        self.set_walls_everywhere()
+        for row in range(0, self.size[0]):
+            for col in range(0, self.size[1]):
+                gw.current_pos = np.array([row, col])
                 while True:
                     unvisited_neighbours = gw.get_unvisited_neighbours()
                     if unvisited_neighbours.size == 0:
                         break
-                    gw.set_current_pos(random.choice(unvisited_neighbours))
-                    new_pos = gw.get_current_pos()
-                    self.__remove_wall_between_neighbours(pos, new_pos)
-                    pos = new_pos
+                    new_pos = random.choice(unvisited_neighbours)
+                    self.remove_wall_between_neighbours(gw.current_pos, new_pos)
+                    gw.current_pos = new_pos
 
-    def __set_walls_everywhere(self):
-        self.__vertical_walls   = np.ones((self.__size[0],     self.__size[1] - 1), dtype=bool)
-        self.__horizontal_walls = np.ones((self.__size[0] - 1, self.__size[1]    ), dtype=bool)
+    def set_walls_everywhere(self):
+        self.vertical_walls   = np.ones((self.size[0],     self.size[1] - 1), dtype=bool)
+        self.horizontal_walls = np.ones((self.size[0] - 1, self.size[1]    ), dtype=bool)
 
-    def __remove_wall_between_neighbours(self, pos_1, pos_2):
+    def remove_wall_between_neighbours(self, pos_1, pos_2):
         vect = pos_2 - pos_1
         if vect[0] == -1 and vect[1] == 0:
-            self.__horizontal_walls[pos_1[0] - 1][pos_1[1]] = False
+            self.horizontal_walls[pos_1[0] - 1][pos_1[1]] = False
         elif vect[0] == 1 and vect[1] == 0:
-            self.__horizontal_walls[pos_1[0]][pos_1[1]] = False
+            self.horizontal_walls[pos_1[0]][pos_1[1]] = False
         elif vect[0] == 0 and vect[1] == -1:
-            self.__vertical_walls[pos_1[0]][pos_1[1] - 1] = False
+            self.vertical_walls[pos_1[0]][pos_1[1] - 1] = False
         elif vect[0] == 0 and vect[1] == 1:
-            self.__vertical_walls[pos_1[0]][pos_1[1]] = False
-
-    def get_size(self):
-        return self.__size.copy()
-
-    def get_start_pos(self):
-        return self.__start_pos.copy()
-
-    def get_finish_pos(self):
-        return self.__finish_pos.copy()
-
-    def get_vertical_walls(self):
-        return self.__vertical_walls.copy()
-
-    def get_horizontal_walls(self):
-        return self.__horizontal_walls.copy()
+            self.vertical_walls[pos_1[0]][pos_1[1]] = False
 
     def get_frame_for_solver(self):
-        frame  = f'{self.__size[0]}\n{self.__size[1]}\n'
-        frame += f'{self.__start_pos[0]}\n{self.__start_pos[1]}\n'
-        frame += f'{self.__finish_pos[0]}\n{self.__finish_pos[1]}\n'
-        for value in np.nditer(self.__vertical_walls):
+        frame  = f'{self.size[0]}\n{self.size[1]}\n'
+        frame += f'{self.start_pos[0]}\n{self.start_pos[1]}\n'
+        frame += f'{self.finish_pos[0]}\n{self.finish_pos[1]}\n'
+        for value in np.nditer(self.vertical_walls):
             frame += f'{int(value)}\n'
-        for value in np.nditer(self.__horizontal_walls):
+        for value in np.nditer(self.horizontal_walls):
             frame += f'{int(value)}\n'
         return frame

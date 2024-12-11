@@ -58,6 +58,7 @@ def test_save():
 
 def test_run():
     m = Maze(np.array([2, 2]), 0)
+    m.generate()
     s = Solver("DummySolver", "python tests/data/solver/dummy_solver.py", False)
     maze_solution = s.run(m)
     assert maze_solution.solving_time_us == 1000
