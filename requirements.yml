@@ -9,3 +9,6 @@ dependencies:
   - numpy
   - pyside6
   - pytest
+  - pyqt
+  - elementpath
+  - multipledispatch
