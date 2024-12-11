@@ -24,11 +24,11 @@ class AppState:
         tree = ET.parse(self.file_path)
         root = tree.getroot()
         for section in root:
-            if section.tag == "visualized_maze_param":
+            if section.tag == "main_maze":
                 self.load_main_maze(section)
             elif section.tag == "solver_list":
                 self.load_solvers(section)
-            elif section.tag == "testing_maze_param_list":
+            elif section.tag == "maze_list":
                 self.load_mazes(section)
 
     def save(self):
