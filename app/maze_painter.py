@@ -41,6 +41,16 @@ class MazePainter(QWidget):
             for y in range(cell_count[1] - 1):
                 if(self.maze.horizontal_walls[y][x]):
                     painter.drawLine(x, y + 1, x + 1, y + 1)
+        # Mark start position
+        painter.setBrush(QColor(0, 255, 0))
+        x = self.maze.start_pos[1]
+        y = self.maze.start_pos[0]
+        painter.drawEllipse(x + 0.5, y + 0.5, 1, 1)
+        # Mark finish position
+        painter.setBrush(QColor(255, 0, 0))
+        x = self.maze.finish_pos[1]
+        y = self.maze.finish_pos[0]
+        painter.drawEllipse(x + 0.5, y + 0.5, 1, 1)
 
     def paint_maze(self, maze):
         self.maze = maze
