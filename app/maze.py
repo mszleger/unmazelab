@@ -97,14 +97,18 @@ class Maze:
         self.set_walls_everywhere()
         for row in range(0, self.size[0]):
             for col in range(0, self.size[1]):
-                gw.current_pos = np.array([row, col])
-                while True:
+                while(True):
+                    gw.current_pos = np.array([row, col])
                     unvisited_neighbours = gw.get_unvisited_neighbours()
                     if unvisited_neighbours.size == 0:
                         break
-                    new_pos = random.choice(unvisited_neighbours)
-                    self.remove_wall_between_neighbours(gw.current_pos, new_pos)
-                    gw.current_pos = new_pos
+                    while True:
+                        unvisited_neighbours = gw.get_unvisited_neighbours()
+                        if unvisited_neighbours.size == 0:
+                            break
+                        new_pos = random.choice(unvisited_neighbours)
+                        self.remove_wall_between_neighbours(gw.current_pos, new_pos)
+                        gw.current_pos = new_pos
 
     def set_walls_everywhere(self):
         self.vertical_walls   = np.ones((self.size[0],     self.size[1] - 1), dtype=bool)
