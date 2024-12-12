@@ -1,9 +1,6 @@
 import random
-from PySide6.QtGui import QPainter, QColor
-from PySide6.QtWidgets import QWidget
 
-from app.maze import Maze
-from app.solver import Solver
+from app.maze_painter import MazePainter
 
 class MazeVisualizerTab:
     def __init__(self, window, app_state):
@@ -11,6 +8,7 @@ class MazeVisualizerTab:
         self.set_references_to_ui_elements(window)
         self.connect_signals()
         self.update_main_maze_ui()
+        self.maze_painter = MazePainter(self.canvas)
 
     def set_references_to_ui_elements(self, window):
         self.status_bar      = window.statusbar
@@ -33,13 +31,13 @@ class MazeVisualizerTab:
 
     def generate_maze(self):
         self.app_state.main_maze.generate()
-        self.draw_maze()
+        self.maze_painter.paint_maze(self.app_state.main_maze)
 
     def solve_maze(self):
         self.generate_maze()
         solver = self.app_state.solver_list[self.list_of_solvers.currentIndex()]
         solution = solver.run(self.app_state.main_maze)
-        self.draw_solution(solution)
+        self.maze_painter.paint_solution(solution)
 
     def save_height(self):
         self.app_state.main_maze.size[0] = int(self.maze_height.text())
@@ -57,9 +55,3 @@ class MazeVisualizerTab:
         self.maze_height.setText(str(self.app_state.main_maze.size[0]))
         self.maze_width.setText(str(self.app_state.main_maze.size[1]))
         self.maze_seed.setText(str(self.app_state.main_maze.seed))
-
-    def draw_maze(self):
-        pass
-
-    def draw_solution(self, solution):
-        pass
