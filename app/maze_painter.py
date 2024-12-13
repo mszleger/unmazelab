@@ -15,6 +15,7 @@ class MazePainter(QWidget):
         canvas.setLayout(layout)
 
     def paintEvent(self, event):
+        # Painting maze
         if type(self.maze) == type(None):
             return
         cell_count = np.array([self.maze.size[1], self.maze.size[0]])
@@ -51,6 +52,20 @@ class MazePainter(QWidget):
         x = self.maze.finish_pos[1]
         y = self.maze.finish_pos[0]
         painter.drawEllipse(x + 0.5, y + 0.5, 1, 1)
+
+        # Painiting solution
+        if type(self.solution) == type(None):
+            return
+        
+        painter.scale(0.1, 0.1)
+        pen = QPen(QColor(0, 0, 255), 2)
+        painter.setPen(pen)
+
+        prev_cell = None
+        for cell in self.solution.path:
+            if type(prev_cell) != type(None):
+                painter.drawLine(10 * prev_cell[1] + 5, 10 * prev_cell[0] + 5, 10 * cell[1] + 5, 10 * cell[0] + 5)
+            prev_cell = cell
 
     def paint_maze(self, maze):
         self.maze = maze
