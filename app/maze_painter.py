@@ -42,22 +42,28 @@ class MazePainter(QWidget):
             for y in range(cell_count[1] - 1):
                 if(self.maze.horizontal_walls[y][x]):
                     painter.drawLine(x, y + 1, x + 1, y + 1)
+
+        painter.scale(0.1, 0.1)
+        
         # Mark start position
         painter.setBrush(QColor(0, 255, 0))
+        pen = QPen(QColor(0, 255, 0), 2)
+        painter.setPen(pen)
         x = self.maze.start_pos[1]
         y = self.maze.start_pos[0]
-        painter.drawEllipse(x + 0.5, y + 0.5, 1, 1)
+        painter.drawEllipse(10 * x + 2, 10 * y + 2, 6, 6)
         # Mark finish position
         painter.setBrush(QColor(255, 0, 0))
+        pen = QPen(QColor(255, 0, 0), 2)
+        painter.setPen(pen)
         x = self.maze.finish_pos[1]
         y = self.maze.finish_pos[0]
-        painter.drawEllipse(x + 0.5, y + 0.5, 1, 1)
+        painter.drawEllipse(10 * x + 2, 10 * y + 2, 6, 6)
 
         # Painiting solution
         if type(self.solution) == type(None):
             return
-        
-        painter.scale(0.1, 0.1)
+
         pen = QPen(QColor(0, 0, 255), 2)
         painter.setPen(pen)
 
@@ -67,8 +73,24 @@ class MazePainter(QWidget):
                 painter.drawLine(10 * prev_cell[1] + 5, 10 * prev_cell[0] + 5, 10 * cell[1] + 5, 10 * cell[0] + 5)
             prev_cell = cell
 
+        # Mark start position
+        painter.setBrush(QColor(0, 255, 0))
+        pen = QPen(QColor(0, 255, 0), 2)
+        painter.setPen(pen)
+        x = self.maze.start_pos[1]
+        y = self.maze.start_pos[0]
+        painter.drawEllipse(10 * x + 2, 10 * y + 2, 6, 6)
+        # Mark finish position
+        painter.setBrush(QColor(255, 0, 0))
+        pen = QPen(QColor(255, 0, 0), 2)
+        painter.setPen(pen)
+        x = self.maze.finish_pos[1]
+        y = self.maze.finish_pos[0]
+        painter.drawEllipse(10 * x + 2, 10 * y + 2, 6, 6)
+
     def paint_maze(self, maze):
         self.maze = maze
+        self.solution = None
         self.update()
 
     def paint_solution(self, solution):
