@@ -1,9 +1,7 @@
-import numpy as np
 import pytest
 import xml.etree.ElementTree as ET
 
 from app.maze import Maze
-from app.maze_solution import MazeSolution
 from app.solver import *
 
 def test_default_constructor():
@@ -22,6 +20,7 @@ def test_xml_loading_constructor():
 
 def test_name():
     s = Solver("Solver Name", "Solver Command", True)
+    assert s.name == "Solver Name"
     with pytest.raises(ValueError, match="Name must be string"):
         s.name = 5
     with pytest.raises(ValueError, match="Name can't be empty string"):
@@ -29,6 +28,7 @@ def test_name():
 
 def test_command():
     s = Solver("Solver Name", "Solver Command", True)
+    assert s.command == "Solver Command"
     with pytest.raises(ValueError, match="Command must be string"):
         s.command = 5
     with pytest.raises(ValueError, match="Command can't be empty string"):
@@ -36,6 +36,7 @@ def test_command():
 
 def test_checked():
     s = Solver("Solver Name", "Solver Command", True)
+    assert s.checked == True
     with pytest.raises(ValueError, match="Checked must be boolean"):
         s.checked = 5
 
@@ -57,7 +58,7 @@ def test_save():
     assert root.find("checked").text == "True"
 
 def test_run():
-    m = Maze(np.array([2, 2]), 0)
+    m = Maze(2, 2, 0)
     m.generate()
     s = Solver("DummySolver", "python tests/data/solver/dummy_solver.py", False)
     maze_solution = s.run(m)

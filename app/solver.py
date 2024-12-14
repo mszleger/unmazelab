@@ -1,7 +1,6 @@
 from multipledispatch import dispatch
 import xml.etree.ElementTree as ET
 
-from app.maze import Maze
 from app.maze_solution import MazeSolution
 from app.utilities import call_command
 
