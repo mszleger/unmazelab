@@ -6,6 +6,11 @@ import xml.etree.ElementTree as ET
 from app.grid_wanderer import GridWanderer
 
 class Maze:
+    @dispatch(int, int, int)
+    def __init__(self, width, height, seed):
+        self.size = np.array([width, height])
+        self.seed = seed
+
     @dispatch(np.ndarray, int)
     def __init__(self, size, seed):
         self.size = size
