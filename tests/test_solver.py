@@ -21,7 +21,8 @@ def test_xml_loading_constructor():
 
 def test_name():
     s = Solver("Solver Name", "Solver Command", True)
-    assert s.name == "Solver Name"
+    s.name = "Solver Name 2"
+    assert s.name == "Solver Name 2"
     with pytest.raises(ValueError, match="Name must be string"):
         s.name = 5
     with pytest.raises(ValueError, match="Name can't be empty string"):
@@ -29,7 +30,8 @@ def test_name():
 
 def test_command():
     s = Solver("Solver Name", "Solver Command", True)
-    assert s.command == "Solver Command"
+    s.command = "Solver Command 2"
+    assert s.command == "Solver Command 2"
     with pytest.raises(ValueError, match="Command must be string"):
         s.command = 5
     with pytest.raises(ValueError, match="Command can't be empty string"):
@@ -37,7 +39,8 @@ def test_command():
 
 def test_checked():
     s = Solver("Solver Name", "Solver Command", True)
-    assert s.checked == True
+    s.checked = False
+    assert s.checked == False
     with pytest.raises(ValueError, match="Checked must be boolean"):
         s.checked = 5
 

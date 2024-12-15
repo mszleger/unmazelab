@@ -15,11 +15,15 @@ def test_frame_loading_constructor():
 
 def test_solving_time_us():
     ms = MazeSolution(1000, np.array([[1, 2], [3, 4]]))
+    ms.solving_time_us = 900
+    assert ms.solving_time_us == 900
     with pytest.raises(ValueError, match="Solving time must be integer"):
         ms.solving_time_us = "test"
 
 def test_path():
     ms = MazeSolution(1000, np.array([[1, 2], [3, 4]]))
+    ms.path = np.array([[2, 3], [4, 5]])
+    assert (ms.path == np.array([[2, 3], [4, 5]])).all()
     with pytest.raises(ValueError, match="Path must be numpy.ndarray"):
         ms.path = 5
     with pytest.raises(ValueError, match="Path must have two columns"):
