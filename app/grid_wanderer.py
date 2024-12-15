@@ -17,6 +17,7 @@ class GridWanderer:
         if (size < 2).any():
             raise ValueError("Both values of size must be equal or greater than 2")
         self._size = size
+        self._current_pos = None
         self._visited_tiles = np.zeros((size[0], size[1]), dtype=bool)
 
     @property
@@ -44,7 +45,7 @@ class GridWanderer:
                               & (neighbours[:, 1] >= 0)
                               & (neighbours[:, 0] <  self.size[0])
                               & (neighbours[:, 1] <  self.size[1])]
-        return np.array(neighbours)
+        return neighbours
 
     def get_unvisited_neighbours(self):
         unvisited_neighbours = []
