@@ -23,7 +23,7 @@ def test_size():
 def test_current_pos():
     gw = GridWanderer(np.array([5, 5]))
     gw.current_pos = np.array([0, 1])
-    assert (gw.size == np.array([0, 1])).all()
+    assert (gw.current_pos == np.array([0, 1])).all()
     with pytest.raises(ValueError, match="Current position must be numpy.ndarray"):
         gw.current_pos = 5
     with pytest.raises(ValueError, match="Current position must be one dimensional array with two values"):
