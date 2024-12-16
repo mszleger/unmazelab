@@ -4,11 +4,12 @@ import random
 import xml.etree.ElementTree as ET
 
 from app.grid_wanderer import GridWanderer
+from app.maze_wanderer import MazeWanderer
 
 class Maze:
     @dispatch(int, int, int)
-    def __init__(self, width, height, seed):
-        self.size = np.array([width, height])
+    def __init__(self, height, width, seed):
+        self.size = np.array([height, width])
         self.seed = seed
 
     @dispatch(np.ndarray, int)
@@ -33,6 +34,10 @@ class Maze:
         if (size < 2).any():
             raise ValueError("Both values of size must be equal or greater than 2")
         self._size = size
+        self._start_pos = None
+        self._finish_pos = None
+        self.vertical_walls = None
+        self.horizontal_walls = None
 
     @property
     def seed(self):
@@ -84,18 +89,21 @@ class Maze:
 
     def generate(self):
         random.seed(self.seed)
+        self.generate_walls()
         self.generate_start_pos()
         self.generate_finish_pos()
-        self.generate_walls()
 
     def generate_start_pos(self):
-        self.start_pos = np.array([random.randint(0, self.size[0] - 1), random.randint(0, self.size[1] - 1)])
+        mw = MazeWanderer(self)
+        g = mw.get_grid_with_distanses_from_pos(np.array([self.size[0] - 1, self.size[1] - 1]))
+        pos = g.argmax()
+        self.start_pos = np.array([pos // self.size[1], pos % self.size[1]])
 
     def generate_finish_pos(self):
-        while True:
-            self.finish_pos = np.array([random.randint(0, self.size[0] - 1), random.randint(0, self.size[1] - 1)])
-            if (self.start_pos != self.finish_pos).any():
-                break
+        mw = MazeWanderer(self)
+        g = mw.get_grid_with_distanses_from_pos(self.start_pos)
+        pos = g.argmax()
+        self.finish_pos = np.array([pos // self.size[1], pos % self.size[1]])
 
     def generate_walls(self):
         gw = GridWanderer(self.size)
@@ -108,12 +116,12 @@ class Maze:
                     if unvisited_neighbours.size == 0:
                         break
                     while True:
-                        unvisited_neighbours = gw.get_unvisited_neighbours()
-                        if unvisited_neighbours.size == 0:
-                            break
                         new_pos = random.choice(unvisited_neighbours)
                         self.remove_wall_between_neighbours(gw.current_pos, new_pos)
                         gw.current_pos = new_pos
+                        unvisited_neighbours = gw.get_unvisited_neighbours()
+                        if unvisited_neighbours.size == 0:
+                            break
 
     def set_walls_everywhere(self):
         self.vertical_walls   = np.ones((self.size[0],     self.size[1] - 1), dtype=bool)
