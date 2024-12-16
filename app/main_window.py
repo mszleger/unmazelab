@@ -20,7 +20,7 @@ class MainWindow:
     def load_ui(self, file_name):
         ui_file = QFile(file_name)
         if not ui_file.open(QIODevice.ReadOnly):
-            print(f"Cannot open {ui_file_name}: {ui_file.errorString()}")
+            print(f"Cannot open {file_name}: {ui_file.errorString()}")
             sys.exit(-1)
         loader = QUiLoader()
         self.window = loader.load(ui_file)
