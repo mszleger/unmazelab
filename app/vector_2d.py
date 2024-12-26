@@ -51,7 +51,7 @@ class Vector2D:
         :rtype: int
         """
         return self._y
-    
+
     @y.setter
     def y(self, y):
         """
@@ -74,7 +74,7 @@ class Vector2D:
         :rtype: str
         """
         return f'({self.x}, {self.y})'
-    
+
     def __repr__(self):
         """
         Dunder returning string representation of vector.
