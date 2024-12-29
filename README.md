@@ -180,7 +180,10 @@ To allow custom solver to communicate with UnMazeLab it has to:
 
 11. For every step in path print vertical step position (int) on standart output and in next line horizontal postion (int).
 
-You can find example of solver written in Python in project repository in folder tests/data/solver/less_dummy_solver.py
+You can find example of solver written in Python in project repository in folder:
+  ```sh
+  tests/data/solver/less_dummy_solver.py
+  ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
