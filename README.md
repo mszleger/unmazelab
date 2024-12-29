@@ -176,9 +176,9 @@ To allow custom solver to communicate with UnMazeLab it has to:
 
 9. Solve maze and measure time of solving.
 
-10. Print on standart output time of solving in micro seconds.
+10. Print on standart output time of solving in micro seconds (int).
 
-11. For every step in path print vertival step position on standart output and in next line horizontal postion.
+11. For every step in path print vertical step position (int) on standart output and in next line horizontal postion (int).
 
 You can find example of solver written in Python in project repository in folder tests/data/solver/less_dummy_solver.py
 
