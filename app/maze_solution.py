@@ -36,7 +36,7 @@ class MazeSolution:
         self._path = path
 
     def load_solver_output_frame(self, frame):
-        values = frame.strip().split('\n')
+        values = frame.split()
         self.solving_time_us = int(values.pop(0))
         path = []
         while values:
