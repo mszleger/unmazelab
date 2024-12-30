@@ -37,6 +37,8 @@ class MazeSolution:
 
     def load_solver_output_frame(self, frame):
         values = frame.split()
+        if len(values) % 2 != 1:
+            raise ValueError('Incorrect length of output frame from solver')
         self.solving_time_us = int(values.pop(0))
         path = []
         while values:
