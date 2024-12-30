@@ -39,10 +39,13 @@ class MazeSolution:
         values = frame.split()
         if len(values) % 2 != 1:
             raise ValueError('Incorrect length of output frame from solver')
-        self.solving_time_us = int(values.pop(0))
+        values = [int(value) if value.isnumeric() else -1 for value in values]
+        if min(values) == -1:
+            raise ValueError('Output frame from solver containing non numeric characters')
+        self.solving_time_us = values.pop(0)
         path = []
         while values:
-            pos = np.array([int(values.pop(0)),
-                            int(values.pop(0))])
+            pos = np.array([values.pop(0),
+                            values.pop(0)])
             path.append(pos)
         self.path = np.array(path)
