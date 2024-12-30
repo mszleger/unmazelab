@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<config><main_maze><height>10</height><width>20</width><seed>999</seed></main_maze><solver_list><solver><name>Simple solver</name><command>python solvers/simple_solver.py</command><checked>False</checked></solver></solver_list><maze_list /></config>
