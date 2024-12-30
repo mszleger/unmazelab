@@ -46,5 +46,5 @@ def test_load_solver_output_frame_with_incorrect_length():
         ms = MazeSolution("1000\n1\n2\n3")
 
 def test_load_solver_output_frame_with_non_numeric_characters():
-    with pytest.raises(ValueError, match="Output frame from solver containing non numeric characters"):
+    with pytest.raises(ValueError, match="Output frame from solver contain non numeric characters"):
         ms = MazeSolution("1000\n1a\n2b\n3c\n4")
