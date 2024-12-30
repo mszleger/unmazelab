@@ -182,7 +182,7 @@ To allow custom solver to communicate with UnMazeLab it has to:
 
 You can find example of solver written in Python in project repository in folder:
   ```sh
-  tests/data/solver/less_dummy_solver.py
+  solvers/simple_solver.py
   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
