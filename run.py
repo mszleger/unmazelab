@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+import sys
+sys.path.append('app')
+
 from app.app_state import AppState
 from app.main_window import MainWindow
 

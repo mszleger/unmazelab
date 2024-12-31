@@ -5,7 +5,6 @@ channels:
   - https://repo.anaconda.com/pkgs/msys2
 dependencies:
   - git
-  - m2-base
   - numpy
   - pyside6
   - pytest

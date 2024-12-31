@@ -113,9 +113,9 @@ To run app navigate to repository directory and activate conda environment:
   conda activate unmazelab
   ```
 
-Run script `run.sh`:
+Run script `run.py`:
   ```sh
-  ./ run.sh
+  ./run.py
   ```
 
 Application has three tabs:
@@ -195,7 +195,7 @@ You can find example of solver written in Python in project repository in folder
 - [x] Add README
 - [ ] Add UML Class Diagram
 - [ ] Refactor code to match google python style guide and class diagram
-- [ ] Modify run script and call command function tests to run not only on Linux
+- [x] Modify run script and call command function tests to run not only on Linux
 - [ ] Fix GUI freezing during raport generating
 - [ ] Add progress bar for raport generator
 - [ ] Add exceptions handling in GUI (e.g. check if input fields aren't empty)
