@@ -193,7 +193,7 @@ You can find example of solver written in Python in project repository in folder
 ## Roadmap
 
 - [x] Add README
-- [ ] Add UML Class Diagram
+- [x] Add UML Class Diagram
 - [ ] Refactor code to match google python style guide and class diagram
 - [x] Modify run script and call command function tests to run not only on Linux
 - [ ] Fix GUI freezing during raport generating
