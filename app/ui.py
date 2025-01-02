@@ -10,6 +10,7 @@ Typical usage example:
   main_window = ui.MainWindow(state)
 '''
 
+import copy
 import csv
 import numpy as np
 import random
@@ -22,7 +23,6 @@ from PySide6 import QtWidgets
 
 from app import app_state
 from app import maze
-from app import solver
 
 
 class MainWindow:
@@ -252,7 +252,7 @@ class SolversUI:
         self.btn_remove.clicked.connect(self.remove_solver)
 
     def add_solver(self):
-        s = solver.Solver(self.name.text(), self.command.text(), False)
+        s = maze.Solver(self.name.text(), self.command.text(), False)
         self.state.solver_list.append(s)
         self.update_solver_list_ui()
         self.state.save()
@@ -262,7 +262,7 @@ class SolversUI:
         if solver_id == -1:
             self.status_bar.showMessage('Select row to edit', 2000)
             return
-        s = solver.Solver(self.name.text(),
+        s = maze.Solver(self.name.text(),
                           self.command.text(),
                           self.state.solver_list[solver_id].checked)
         self.state.solver_list[solver_id] = s
@@ -411,3 +411,51 @@ class MazePainter(QtWidgets.QWidget):
     def paint_solution(self, solution):
         self.solution = solution
         self.update()
+
+    def _draw_line(self,
+                   pos_1: maze.Vector2D,
+                   pos_2: maze.Vector2D,
+                   width: int,
+                   color: QtGui.QColor,
+                   painter: QtGui.QPainter):
+        painter.setPen(QtGui.QPen(color, width))
+        painter.drawLine(pos_1.x, pos_1.y,
+                         pos_2.x, pos_2.y)
+
+
+
+
+
+    def draw_maze(self):
+
+        self._draw_outer_walls()
+        self._draw_vertical_walls()
+        self._draw_horizontal_walls()
+
+
+    def _draw_outer_walls(self,
+                          vertex_1: maze.Vector2D,
+                          vertex_2: maze.Vector2D,
+                          painter: QtGui.QPainter):
+        painter.drawLine(vertex_1.x, vertex_1.y, vertex_1.x, vertex_2.y)
+        painter.drawLine(vertex_1.x, vertex_1.y, vertex_2.x, vertex_1.y)
+        painter.drawLine(vertex_2.x, vertex_2.y, vertex_1.x, vertex_2.y)
+        painter.drawLine(vertex_2.x, vertex_2.y, vertex_2.x, vertex_1.y)
+
+    def _draw_vertical_walls(self,
+                             start_pos: maze.Vector2D,
+                             wall_len: int,
+                             painter: QtGui.QPainter):
+        row_start_pos = copy.deepcopy(start_pos)
+        for _ in range(0, self.m.size[0]):
+            col_start_pos = copy.deepcopy(row_start_pos)
+            row_start_pos.y += wall_len
+            for _ in range(0, self.m.size[1] - 1):
+
+                #painter.drawLine(pos.x, pos.y, pos.x, pos.y + wall_len)
+                col_start_pos.x += wall_len
+
+        pass
+
+    def _draw_horizontal_walls(self):
+        pass

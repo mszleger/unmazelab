@@ -2,8 +2,7 @@ import numpy as np
 import os
 import xml.etree.ElementTree as ET
 
-from app.maze import Maze
-from app.solver import Solver
+from app import maze
 
 class AppState:
     def __init__(self, file_path):
@@ -18,7 +17,7 @@ class AppState:
             print("Loaded default parameters")
 
     def load(self):
-        self.main_maze = Maze(np.array([10, 20]), 999)
+        self.main_maze = maze.Maze(np.array([10, 20]), 999)
         self.solver_list = []
         self.maze_list = []
         tree = ET.parse(self.file_path)
@@ -43,19 +42,19 @@ class AppState:
         tree.write(self.file_path, encoding="utf-8", xml_declaration=True)
 
     def set_default_params(self):
-        self.main_maze = Maze(np.array([10, 20]), 999)
+        self.main_maze = maze.Maze(np.array([10, 20]), 999)
         self.solver_list = []
         self.maze_list = []
 
     def load_main_maze(self, main_maze_root):
-        self.main_maze = Maze(main_maze_root)
+        self.main_maze = maze.Maze(main_maze_root)
 
     def save_main_maze(self, main_maze_root):
         self.main_maze.save(main_maze_root)
 
     def load_solvers(self, solver_list_root):
         for solver in solver_list_root:
-            self.solver_list.append(Solver(solver))
+            self.solver_list.append(maze.Solver(solver))
 
     def save_solvers(self, solver_list_root):
         for solver in self.solver_list:
@@ -63,8 +62,8 @@ class AppState:
             solver.save(solver_root)
 
     def load_mazes(self, maze_list_root):
-        for maze in maze_list_root:
-            self.maze_list.append(Maze(maze))
+        for m in maze_list_root:
+            self.maze_list.append(maze.Maze(m))
 
     def save_mazes(self, maze_list_root):
         for maze in self.maze_list:
