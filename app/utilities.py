@@ -1,18 +1,25 @@
+'''A module containing any helper functions used by other modules.'''
+
 import subprocess
 
-def call_command(command, stdin):
-    """
-    Calls command in command line.
+def call_command(command: str, stdin: str) -> str:
+    '''Calls command in shell.
 
-    :param stdin: String with standard input to send to runned command.
-    :type stdin: str
+    Calls given command in shell, sends on standard input of started program
+    given string and returns data sent by started program to standard output.
 
-    :return: Standard output returned by runned command.
-    :rtype: str
-    """
+    Args:
+        command: Command to run in shell to start program.
+        stdin: String to send on standard input of started program.
+
+    Returns:
+        String containing data sent by started program on it's standard output.
+    '''
     command = command.split()
-    proc = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    proc.stdin.write(stdin.encode("utf8"))
+    proc = subprocess.Popen(command,
+                            stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE)
+    proc.stdin.write(stdin.encode('utf8'))
     proc.stdin.flush()
     stdout, _ = proc.communicate()
-    return stdout.decode("utf8").strip()
+    return stdout.decode('utf8').strip()
