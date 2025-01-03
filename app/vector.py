@@ -56,7 +56,7 @@ class Vector2D:
             raise ValueError('Y has to be value of type int')
         self._y = y
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         '''Returns representation string of vector.
 
         Returns:
