@@ -1,3 +1,5 @@
+# No new info for docstring, so pylint: disable=missing-module-docstring
+
 from app import utilities
 
 def test_call_command():
